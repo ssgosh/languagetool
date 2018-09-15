@@ -43,6 +43,7 @@ public class CommandLineOptions {
   private final Set<CategoryId> enabledCategories = new HashSet<>();
   private final Set<CategoryId> disabledCategories = new HashSet<>();
 
+  private boolean applyAndPrintRules = false;
   private boolean printUsage = false;
   private boolean printVersion = false;
   private boolean printLanguages = false;
@@ -84,6 +85,14 @@ public class CommandLineOptions {
   private String falseFriendFile = null;
   @Nullable
   private String bitextRuleFile = null;
+
+  public boolean isApplyAndPrintRules() {
+      return applyAndPrintRules;
+  }
+
+  public void setApplyAndPrintRules(boolean foobar) {
+    this.applyAndPrintRules = foobar;
+  }
 
   public boolean isPrintUsage() {
     return printUsage;

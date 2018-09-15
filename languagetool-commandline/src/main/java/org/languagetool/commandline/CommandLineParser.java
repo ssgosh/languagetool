@@ -36,7 +36,10 @@ public class CommandLineParser {
     }
     CommandLineOptions options = new CommandLineOptions();
     for (int i = 0; i < args.length; i++) {
-      if (args[i].equals("--version")) {
+      if (args[i].equals("--apply-and-print-rules")) {
+        // Will print rules in a file called applied-rules.txt
+        options.setApplyAndPrintRules(true);
+      } else if (args[i].equals("--version")) {
         options.setPrintVersion(true);
       } else if (args[i].equals("--list")) {
         options.setPrintLanguages(true);

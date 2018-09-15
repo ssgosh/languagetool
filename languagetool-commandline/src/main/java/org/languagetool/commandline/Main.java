@@ -29,6 +29,7 @@ import org.languagetool.language.AmericanEnglish;
 import org.languagetool.language.English;
 import org.languagetool.language.LanguageIdentifier;
 import org.languagetool.rules.Rule;
+import org.languagetool.rules.RuleMatch;
 import org.languagetool.rules.bitext.BitextRule;
 import org.languagetool.rules.patterns.AbstractPatternRule;
 import org.languagetool.rules.patterns.PatternRuleLoader;
@@ -183,7 +184,20 @@ class Main {
         changeLanguage(language, options.getMotherTongue(), options.getDisabledRules(), options.getEnabledRules());
         System.err.println("Using " + language.getName() + " for file " + filename);
       }
-      if (options.isApplySuggestions()) {
+      if (options.isApplyAndPrintRules()){
+        //System.out.println("Not supported yet");
+        String[] lines = text.split(System.getProperty("line.separator"));
+        for (String line : lines) {
+          List<RuleMatch> ruleMatches = lt.check(line);
+          for (RuleMatch rm: ruleMatches) {
+            System.err.print(rm.getRule().getId() + " ");
+          }
+          System.err.println("");
+          System.out.println(Tools.correctTextFromMatches(line, ruleMatches));
+        }
+        
+        //System.out.print(Tools.correctText(text, lt));
+      } else if (options.isApplySuggestions()) {
         System.out.print(Tools.correctText(text, lt));
       } else if (profileRules) {
         CommandLineTools.profileRulesOnText(text, lt);
