@@ -16,7 +16,11 @@ sentences = f.readlines()
 
 for s in sentences:
     errors = ATD.checkDocument(s)
+    s_corr = s.rstrip()
     for error in errors:
         print "%s error for: %s **%s**" % (error.type, error.precontext, error.string)
         print "some suggestions: %s" % (", ".join(error.suggestions),)
+        if error.suggestions:
+            s_corr = s_corr.replace(error.string, error.suggestions[0])
+    print s_corr
 
