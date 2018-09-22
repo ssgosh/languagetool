@@ -16,11 +16,17 @@ sentences = f.readlines()
 
 for s in sentences:
     errors = ATD.checkDocument(s)
-    s_corr = s.rstrip()
+    s_unicode = s.decode('utf-8')
+    s_corr = s_unicode.encode('utf-8')
+    s_corr = s_corr.rstrip()
     for error in errors:
-        print "%s error for: %s **%s**" % (error.type, error.precontext, error.string)
-        print "some suggestions: %s" % (", ".join(error.suggestions),)
-        if error.suggestions:
-            s_corr = s_corr.replace(error.string, error.suggestions[0])
+        print >>sys.stderr, ("%s error for: %s **%s**. Description: %s" % (error.type,
+                error.precontext, error.string,
+                error.description)).encode('utf-8')
+        if not "Diacritical" in error.description:
+            print >>sys.stderr, ("some suggestions: %s" % (", ".join(error.suggestions),)).encode('utf-8')
+            if error.suggestions:
+                s_corr = s_corr.replace(error.string.encode('utf-8'),
+                        error.suggestions[0].encode('utf-8'))
     print s_corr
 

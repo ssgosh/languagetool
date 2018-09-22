@@ -18,6 +18,7 @@ License: MIT
 import httplib
 import urllib
 from xml.etree import ElementTree
+import sys
 
 _key = None
 
@@ -52,7 +53,7 @@ def checkDocument(text, key=None):
         raise Exception('Unexpected response code from AtD service %d' % response.status)
     s = response.read()
     e = ElementTree.fromstring(s)
-    print(s)
+    print >>sys.stderr, s
     service.close()
     errs = e.findall('message')
     if len(errs) > 0:
