@@ -35,6 +35,7 @@ import org.languagetool.tagging.Tagger;
 import org.languagetool.tagging.disambiguation.Disambiguator;
 import org.languagetool.tagging.disambiguation.rules.XmlRuleDisambiguator;
 import org.languagetool.tagging.en.EnglishTagger;
+import org.languagetool.tagging.en.StanfordCoreNLPTagger;
 import org.languagetool.tokenizers.SRXSentenceTokenizer;
 import org.languagetool.tokenizers.SentenceTokenizer;
 import org.languagetool.tokenizers.WordTokenizer;
@@ -103,7 +104,8 @@ public class English extends Language implements AutoCloseable {
   @Override
   public Tagger getTagger() {
     if (tagger == null) {
-      tagger = new EnglishTagger();
+      //tagger = new EnglishTagger();
+      tagger = new StanfordCoreNLPTagger();
     }
     return tagger;
   }
