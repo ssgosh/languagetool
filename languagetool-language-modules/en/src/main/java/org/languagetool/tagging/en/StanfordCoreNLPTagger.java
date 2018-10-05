@@ -21,10 +21,12 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
       throws IOException {
 
     String str_sentence = concatStringsWSep(sentenceTokens, " ");
+    List<String> postags = tagString(str_sentence);
+
     List<AnalyzedTokenReadings> tokenReadings = new ArrayList<>();
     int pos = 0;
-    for (String word : sentenceTokens) {
-      List<AnalyzedToken> l = getAnalyzedTokens(word);
+    for (int i = 0; i < sentenceTokens.length(); ++i) {
+      List<AnalyzedToken> l = getAnalyzedTokensForIthWord(sentenceTokens, postags, i);
       tokenReadings.add(new AnalyzedTokenReadings(l, pos));
       pos += word.length();
     }
@@ -61,4 +63,11 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
 
     return postags;
   }
+
+  private List<AnalyzedToken> getAnalyzedTokensForIthWord(List<String>sentenceTokens, List<String> postags, List<String> lemmas, int i) {
+    List<AnalyzedToken> ret;
+    ret.add(new AnalyzedToken(sentenceTokens.get(i), postags.get(i), lemmas.get(i)));
+    return ret;
+  }
+
 }
