@@ -26,14 +26,14 @@ import java.io.IOException;
  * @author Marcin Milkowski
  */
 public class StanfordCoreNLPTagger extends EnglishTagger{
-  MaxentTagger tagger;
+  //MaxentTagger tagger;
 
   @Override
   public List<AnalyzedTokenReadings> tag(List<String> sentenceTokens)
       throws IOException {
 
     // sentenceTokens contains spaces; just concatenate them as-is
-    String str_sentence = concatStringsWSep(sentenceTokens, "");
+    String str_sentence = concatStringsWSep(sentenceTokens, " ");
 
     // CoreNLP simple.Sentence does tagging and lemmatization. No need to
     // delve in MaxentTagger or CoreNLP pipeline.
@@ -73,7 +73,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
 
   public StanfordCoreNLPTagger() {
     super();
-    this.tagger = new MaxentTagger("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
+    //this.tagger = new MaxentTagger("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
     System.out.println("Using StanfordCoreNLPTagger");
   }
 
@@ -87,7 +87,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
     return sb.toString();                           
   }
 
-  private List<String> tagString(String sentence) {
+/*  private List<String> tagString(String sentence) {
     String tags = this.tagger.tagString(sentence);
     //System.out.println(tags);
     String[] eachTag = tags.split("\\s+");
@@ -102,10 +102,9 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
 
     return postags;
   }
-
+*/
   private List<AnalyzedToken> getAnalyzedTokensForIthWord(List<String>sentenceTokens, List<String> postags, List<String> lemmas, int i, int j) {
     List<AnalyzedToken> ret = new ArrayList<>();
-    //ret.add(new AnalyzedToken(sentenceTokens.get(i), postags.get(i), lemmas.get(i)));
     String tag, lemma;
     if (j == -1) {
         tag = null;
