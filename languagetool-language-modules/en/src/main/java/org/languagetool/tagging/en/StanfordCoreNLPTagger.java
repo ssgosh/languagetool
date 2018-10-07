@@ -6,6 +6,16 @@ import org.languagetool.tagging.BaseTagger;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.*;
+
+import org.languagetool.tagging.*;
+
+import org.languagetool.*;
+
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+
+import java.io.IOException;
+
 /**
  * English Part-of-speech tagger.
  * The POS tagset is described in
@@ -25,8 +35,9 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
 
     List<AnalyzedTokenReadings> tokenReadings = new ArrayList<>();
     int pos = 0;
-    for (int i = 0; i < sentenceTokens.length(); ++i) {
-      List<AnalyzedToken> l = getAnalyzedTokensForIthWord(sentenceTokens, postags, i);
+    for (int i = 0; i < sentenceTokens.size(); ++i) {
+      String word = sentenceTokens.get(i);
+      List<AnalyzedToken> l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i);
       tokenReadings.add(new AnalyzedTokenReadings(l, pos));
       pos += word.length();
     }
@@ -36,6 +47,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
   public StanfordCoreNLPTagger() {
     super();
     this.tagger = new MaxentTagger("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
+    System.out.println("Using StanfordCoreNLPTagger");
   }
 
   private String concatStringsWSep(Iterable<String> strings, String separator) {
@@ -65,7 +77,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
   }
 
   private List<AnalyzedToken> getAnalyzedTokensForIthWord(List<String>sentenceTokens, List<String> postags, List<String> lemmas, int i) {
-    List<AnalyzedToken> ret;
+    List<AnalyzedToken> ret = new ArrayList<>();
     ret.add(new AnalyzedToken(sentenceTokens.get(i), postags.get(i), lemmas.get(i)));
     return ret;
   }
