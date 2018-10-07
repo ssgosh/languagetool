@@ -1,5 +1,7 @@
 package org.languagetool.tagging.en;
 
+import edu.stanford.nlp.simple.Sentence;
+
 import java.util.Locale;
 
 import org.languagetool.tagging.BaseTagger;
@@ -30,8 +32,14 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
   public List<AnalyzedTokenReadings> tag(List<String> sentenceTokens)
       throws IOException {
 
-    String str_sentence = concatStringsWSep(sentenceTokens, " ");
-    List<String> postags = tagString(str_sentence);
+    // sentenceTokens contains spaces; just concatenate them as-is
+    String str_sentence = concatStringsWSep(sentenceTokens, "");
+
+    // CoreNLP simple.Sentence does tagging and lemmatization. No need to
+    // delve in MaxentTagger or CoreNLP pipeline.
+    Sentence coreNLPSentence = new Sentence(str_sentence);
+    List<String> lemmas = coreNLPSentence.lemmas();
+    List<String> postags = coreNLPSentence.posTags();
     List<AnalyzedTokenReadings> tokenReadings = new ArrayList<>();
 
     System.out.println(str_sentence);
@@ -44,16 +52,17 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
     }
 
     System.out.println("Length of postags: " + postags.size() + ", Number of tokens: " + sentenceTokens.size());
-    assert(postags.size() == sentenceTokens.size());
+
+    // Insert lemma and POS tags. For whitespace both are null
     int pos = 0;
     for (int i = 0, j = 0; i < sentenceTokens.size(); ++i) {
       String word = sentenceTokens.get(i);
       List<AnalyzedToken> l = null;
       if (" ".equals(word)) {
-        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i, -1);
+        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, lemmas, i, -1);
       } else {
         System.out.println("Sending j for word " + word + ", j = " + j);
-        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i, j);
+        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, lemmas, i, j);
         ++j;
       }
       tokenReadings.add(new AnalyzedTokenReadings(l, pos));
