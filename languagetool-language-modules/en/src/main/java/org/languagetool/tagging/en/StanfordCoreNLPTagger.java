@@ -14,7 +14,7 @@ import org.languagetool.tagging.*;
 
 import org.languagetool.*;
 
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+//import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 import java.io.IOException;
 
@@ -33,16 +33,21 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
       throws IOException {
 
     // sentenceTokens contains spaces; just concatenate them as-is
-    String str_sentence = concatStringsWSep(sentenceTokens, " ");
+    //String str_sentence = concatStringsWSep(sentenceTokens, " ");
 
+    List<String> coreNLPTokens = new ArrayList<>(sentenceTokens);
+    // Remove all spaces and only send the non-whitespace tokens for
+    // pos-tagging and lemmatization. This gives consistent results
+    coreNLPTokens.removeAll(Arrays.asList(" "));
     // CoreNLP simple.Sentence does tagging and lemmatization. No need to
     // delve in MaxentTagger or CoreNLP pipeline.
-    Sentence coreNLPSentence = new Sentence(str_sentence);
+    Sentence coreNLPSentence = new Sentence(coreNLPTokens);
     List<String> lemmas = coreNLPSentence.lemmas();
     List<String> postags = coreNLPSentence.posTags();
     List<AnalyzedTokenReadings> tokenReadings = new ArrayList<>();
 
-    System.out.println(str_sentence);
+/*
+    System.out.println(Arrays.toString(coreNLPTokens.toArray()));
     for (String word : sentenceTokens) {
         System.out.println(word);
     }
@@ -52,7 +57,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
     }
 
     System.out.println("Length of postags: " + postags.size() + ", Number of tokens: " + sentenceTokens.size());
-
+*/
     // Insert lemma and POS tags. For whitespace both are null
     int pos = 0;
     for (int i = 0, j = 0; i < sentenceTokens.size(); ++i) {
@@ -61,7 +66,7 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
       if (" ".equals(word)) {
         l = getAnalyzedTokensForIthWord(sentenceTokens, postags, lemmas, i, -1);
       } else {
-        System.out.println("Sending j for word " + word + ", j = " + j);
+//        System.out.println("Sending j for word " + word + ", j = " + j);
         l = getAnalyzedTokensForIthWord(sentenceTokens, postags, lemmas, i, j);
         ++j;
       }
