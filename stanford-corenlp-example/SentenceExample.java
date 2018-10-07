@@ -6,7 +6,7 @@ public class SentenceExample {
     String s = "I am a good boy.";
     String s1 = "He really likes his job.";
 
-    String[] arr = {"I", "am", "a", "good", "boy"};
+    String[] arr = {"I", "am", "a", "good", "boy", ".", ".", "."};
 
     String[] arr1 = {"I", " ", "am", " ", "a", " ", "good", " ", "boy"};
 
