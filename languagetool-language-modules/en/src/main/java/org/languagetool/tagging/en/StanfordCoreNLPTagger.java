@@ -32,12 +32,30 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
 
     String str_sentence = concatStringsWSep(sentenceTokens, " ");
     List<String> postags = tagString(str_sentence);
-
     List<AnalyzedTokenReadings> tokenReadings = new ArrayList<>();
+
+    System.out.println(str_sentence);
+    for (String word : sentenceTokens) {
+        System.out.println(word);
+    }
+
+    for (String tag : postags) {
+        System.out.println(tag);
+    }
+
+    System.out.println("Length of postags: " + postags.size() + ", Number of tokens: " + sentenceTokens.size());
+    assert(postags.size() == sentenceTokens.size());
     int pos = 0;
-    for (int i = 0; i < sentenceTokens.size(); ++i) {
+    for (int i = 0, j = 0; i < sentenceTokens.size(); ++i) {
       String word = sentenceTokens.get(i);
-      List<AnalyzedToken> l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i);
+      List<AnalyzedToken> l = null;
+      if (" ".equals(word)) {
+        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i, -1);
+      } else {
+        System.out.println("Sending j for word " + word + ", j = " + j);
+        l = getAnalyzedTokensForIthWord(sentenceTokens, postags, null, i, j);
+        ++j;
+      }
       tokenReadings.add(new AnalyzedTokenReadings(l, pos));
       pos += word.length();
     }
@@ -76,9 +94,23 @@ public class StanfordCoreNLPTagger extends EnglishTagger{
     return postags;
   }
 
-  private List<AnalyzedToken> getAnalyzedTokensForIthWord(List<String>sentenceTokens, List<String> postags, List<String> lemmas, int i) {
+  private List<AnalyzedToken> getAnalyzedTokensForIthWord(List<String>sentenceTokens, List<String> postags, List<String> lemmas, int i, int j) {
     List<AnalyzedToken> ret = new ArrayList<>();
-    ret.add(new AnalyzedToken(sentenceTokens.get(i), postags.get(i), lemmas.get(i)));
+    //ret.add(new AnalyzedToken(sentenceTokens.get(i), postags.get(i), lemmas.get(i)));
+    String tag, lemma;
+    if (j == -1) {
+        tag = null;
+    } else {
+        tag = postags.get(j);
+    }
+
+    if (lemmas == null || j == -1) {
+        lemma = null;
+    } else {
+        lemma = lemmas.get(j);
+    }
+
+    ret.add(new AnalyzedToken(sentenceTokens.get(i), tag, lemma));
     return ret;
   }
 
